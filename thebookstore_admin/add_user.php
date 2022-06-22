@@ -1,0 +1,43 @@
+<?php
+require_once "pdo.php";
+session_start();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bookstore|New Account</title>
+</head>
+<body>
+    <h1>New Account</h1>
+
+    <form method="post">
+        <p>First Name:
+        <input type="text" name="fname"></p>
+        <p>Last Name:
+        <input type="text" name="lname"></p>
+        <p>Email:
+        <input type="text" name="email"></p>
+        <p>Password:
+        <input type="password" name="password"></p>
+        <p>Phone:
+        <input type="text" name="phone"></p>
+        <p>Address:
+        <input type="text" name="address"></p>
+        <p>Postal Code:
+        <input type="text" name="pcode"></p>
+        <p>Town:
+        <input type="text" name="town"></p>
+        <p>Admin:
+        <label for="yes">Yes</label><br>
+        <input type="radio" id="yes" name="admin" value=1></p>
+        <label for="no">No</label><br>
+        <input type="radio" id="no" name="admin" value=0></p>
+        <p><input type="submit" value="Add"/>
+        <a href="add_user.php">Cancel</a></p>
+    </form>
+</body>
+</html>
