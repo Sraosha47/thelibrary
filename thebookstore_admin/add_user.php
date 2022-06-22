@@ -13,7 +13,6 @@ session_start();
 </head>
 <body>
     <h1>New Account</h1>
-
     <form method="post">
         <p>First Name:
         <input type="text" name="fname"></p>
@@ -32,10 +31,10 @@ session_start();
         <p>Town:
         <input type="text" name="town"></p>
         <p>Admin:
-        <label for="yes">Yes</label><br>
-        <input type="radio" id="yes" name="admin" value=1></p>
-        <label for="no">No</label><br>
-        <input type="radio" id="no" name="admin" value=0></p>
+        <input type="radio" id="yes" name="admin" value=1>
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="admin" value=0>
+        <label for="no">No</label></p>
         <p><input type="submit" value="Add"/>
         <a href="add_user.php">Cancel</a></p>
     </form>
