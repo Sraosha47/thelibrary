@@ -12,6 +12,15 @@ session_start();
     <title>The Bookstore|Login</title>
 </head>
 <body>
-    <h1>Seems to be working.</h1>
+    <h1>The Bookstore|Admin Portal</h1>
+
+    <form method="post">
+        <p>Email:
+        <input type="text" name="email"></p>
+        <p>Password:
+        <input type="password" name="password"></p>
+        <p><input type="submit" value="Sign In"/>
+        <a href="index.php">Cancel</a></p>
+    </form>
 </body>
 </html>
