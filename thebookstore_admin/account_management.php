@@ -24,7 +24,19 @@ session_start();
             unset($_SESSION['success']);
         }
         echo('<table border="1">'."\n");
-        $stmt = $pdo->query("SELECT First_Name, Last_Name, Email, Account_ID FROM accounts");
+        echo "<tr><td>";
+        echo('First_Name');
+        echo("</td><td>");
+        echo('Last_Name');
+        echo("</td><td>");
+        echo('Email');
+        echo("</td><td>");
+        echo('Admin');
+        echo("</td><td>");
+        echo('Action');
+        echo("</td></tr>\n");
+        $stmt = $pdo->query("SELECT First_Name, Last_Name, Email, Admin, Account_ID FROM accounts");
+
         while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
             echo "<tr><td>";
             echo(htmlentities($row['First_Name']));
@@ -32,6 +44,12 @@ session_start();
             echo(htmlentities($row['Last_Name']));
             echo("</td><td>");
             echo(htmlentities($row['Email']));
+            echo("</td><td>");
+            if($row['Admin']) {
+                echo("Yes");
+            } else {
+                echo("No");
+            }
             echo("</td><td>");
             echo('<a href="edit_user.php?Account_ID='.$row['Account_ID'].'">Edit</a> / ');
             echo('<a href="delete_user.php?Account_ID='.$row['Account_ID'].'">Delete</a>');
