@@ -34,7 +34,7 @@ session_start();
         echo('Action');
         echo("</td></tr>\n");
         
-        $stmt = $pdo->query("SELECT Title, ISBN, Available FROM Books");
+        $stmt = $pdo->query("SELECT Title, ISBN, Available, Book_ID FROM Books");
 
         while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
             echo( "<tr><td>");
@@ -48,8 +48,8 @@ session_start();
                 echo("No");
             }
             echo("</td><td>");
-            echo('<a href="edit_user.php?Account_ID='.$row['Account_ID'].'">Edit</a> / ');
-            echo('<a href="delete_user.php?Account_ID='.$row['Account_ID'].'">Remove</a>');
+            echo('<a href="edit_user.php?Book_ID='.$row['Book_ID'].'">Edit</a> / ');
+            echo('<a href="delete_user.php?Book_ID='.$row['Book_ID'].'">Remove</a>');
             echo("</td></tr>\n");
         }
         echo("<a href='add_book.php'>Add New Book</a>");
