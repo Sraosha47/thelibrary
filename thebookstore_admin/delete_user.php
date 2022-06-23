@@ -24,7 +24,7 @@ session_start();
     // Guardian: Make sure that Account_ID is present
     if ( ! isset($_GET['Account_ID']) ) {
       $_SESSION['error'] = "Missing Account_ID";
-      header('Location: index.php');
+      header('Location: account_management.php');
       return;
     }
 
