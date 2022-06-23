@@ -12,7 +12,6 @@ session_start();
     <title>The Bookstore|New Account</title>
 </head>
 <body>
-
     <?php
         if ( isset($_POST['fname'])  
             && isset($_POST['lname']) 
@@ -22,7 +21,7 @@ session_start();
             // Data validation
             if ( strlen($_POST['fname']) < 1 || strlen($_POST['password']) < 1) {
             $_SESSION['error'] = 'Missing data';
-            header("Location: add.php");
+            header("Location: add_user.php");
             return;
             }
 
@@ -32,8 +31,8 @@ session_start();
             return;
             }
 
-            $sql = "INSERT INTO accounts (First_Name, Last_Name, Email, 'Password', Phone, Street, Admin, Postal_FK)
-                    VALUES (:fname, :lname, :email, :password, :phone, :street, :admin, (SELECT Postal_ID FROM postal_codes WHERE CODE LIKE :pcode))";
+            $sql = "INSERT INTO accounts (First_Name, Last_Name, Email, Password, Phone, Street, Postal_FK, Admin)
+                    VALUES (:fname, :lname, :email, :password, :phone, :address, (SELECT Postal_ID FROM postal_codes WHERE CODE LIKE :pcode && Town LIKE :town), :admin)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(
             ':fname' => $_POST['fname'],
@@ -42,11 +41,12 @@ session_start();
             ':password' => $_POST['password'],
             ':phone' => $_POST['phone'],
             ':address' => $_POST['address'],
-            ':admin' => $_POST['admin'],
-            ':pcode' => $_POST['pcode']
+            ':pcode' => $_POST['pcode'],
+            ':town' => $_POST['town'],
+            ':admin' => $_POST['admin']
             ));
             $_SESSION['success'] = 'Account Added';
-            header( 'Location: index.php' ) ;
+            header( 'Location: account_management.php' ) ;
             return;
         }
 
@@ -73,14 +73,15 @@ session_start();
         <input type="text" id="address" name="address"></p>
         <p><label for="pcode">Postal Code:</label>
         <input type="text" id="pcode" name="pcode"></p>
+        <p><label for="town">Town:</label>
+        <input type="text" id="town" name="town"></p>
         <p><label for="admin">Admin:</label>
-        <input type="text" id="admin" name="admin"></p>
-<!--        <select id="admin" name="admin">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-        </select></p> -->
+        <input type="radio" id="yes" name="admin" value=1>
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="admin" value=0>
+        <label for="no">No</label></p>
         <p><input type="submit" value="Add"/>
-        <a href="add_user.php">Cancel</a></p>
+        <a href="account_management.php">Cancel</a></p>
     </form>
 </body>
 </html>
