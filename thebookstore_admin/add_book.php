@@ -36,7 +36,7 @@ session_start();
             ':release' => $_POST['release'],
             ':available' => $_POST['available']
             ));
-            $_SESSION['success'] = 'Account Added';
+            $_SESSION['success'] = 'Book Added';
             header( 'Location: library_management.php' ) ;
             return;
         }
