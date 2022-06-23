@@ -54,17 +54,17 @@ session_start();
         <input type="text" id="title" name="title"></p>
         <p><label for="isbn">ISBN:</label>
         <input type="text" id="isbn" name="isbn"></p>
-        <p><label for="description">Description:</label>
-        <input type="text" id="description" name="description"></p>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
         <p><label for="release">Release:</label>
         <input type="release" id="release" name="release"></p>
         <p><label for="available">Available:</label>
-        <select id="available" name="available">
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-        </select></p> 
+        <input type="radio" id="yes" name="available" value=1>
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="available" value=0>
+        <label for="no">No</label></p>
         <p><input type="submit" value="Add"/>
-        <a href="add_user.php">Cancel</a></p>
+        <a href="library_management.php">Cancel</a></p>
     </form>
 </body>
 </html>
