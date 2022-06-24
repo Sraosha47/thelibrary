@@ -45,28 +45,18 @@ session_start();
 // Guardian: Make sure that Book_ID is present
 if ( ! isset($_GET['Book_ID']) ) {
   $_SESSION['error'] = "Missing Book_ID";
-  header('Location: index.php');
+  header('Location: library_management.php');
   return;
 }
 
 $stmt = $pdo->prepare(
-    "SELECT 
-    b.*, g.Genre, CONCAT(a.First_Name, ' ', a.Last_Name) AS Author 
-    FROM books b
-    JOIN authors_books ab
-        ON b.Book_ID = ab.Book_FK
-    JOIN authors a
-        ON a.Author_ID = ab.Author_FK
-    JOIN genres_books gb
-        ON b.Book_ID = gb.Book_FK
-    JOIN genres g
-        ON gb.Genre_FK = g.Genre_ID
-    WHERE b.Book_ID = :ID");
+    "SELECT * FROM books
+    WHERE Book_ID = :ID");
 $stmt->execute(array(":ID" => $_GET['Book_ID']));
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if ( $row === false ) {
     $_SESSION['error'] = 'Bad value for Book_ID';
-    header( 'Location: account_management.php' ) ;
+    header( 'Location: library_management.php' ) ;
     return;
 }
 
@@ -81,12 +71,10 @@ $description = htmlentities($row['Description']);
 $isbn = htmlentities($row['ISBN']);
 $release = htmlentities($row['Release_Date']);
 $available = htmlentities($row['Available']);
-$genre = htmlentities($row['Genre']);
-$author = htmlentities($row['Author']);
 $book = $row['Book_ID'];
 
 //array containing all Genres associated with the book
-$Arr_Genre = array();
+$Arr_Genres = array();
 $Genres = $pdo->prepare(
     "SELECT g.Genre from books b
     JOIN genres_books gb
@@ -98,8 +86,26 @@ $Genres = $pdo->prepare(
 $Genres->execute(array(":ID" => $_GET['Book_ID']));
 
 while ($row = $Genres->fetch(PDO::FETCH_ASSOC)){
-    array_push($Arr_Genre, $row['Genre']);
+    array_push($Arr_Genres, $row['Genre']);
 }
+
+//array containing all Authors associated with the book
+$Arr_Authors = array();
+$Authors = $pdo->prepare(
+    "SELECT concat(a.First_Name, ' ', a.Last_Name) as Author from books b
+    JOIN authors_books ab
+        on ab.Book_FK = b.Book_ID
+    Join authors a
+        on a.Author_ID = ab.Author_FK
+    where b.Book_ID = :ID
+    ");
+$Authors->execute(array(":ID" => $_GET['Book_ID']));
+
+while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
+    array_push($Arr_Authors, $row['Author']);
+}
+/*$genre = htmlentities($row['Genre']);
+$author = htmlentities($row['Author']);*/
 ?>
 
 <!DOCTYPE html>
@@ -142,7 +148,7 @@ while ($row = $Genres->fetch(PDO::FETCH_ASSOC)){
             $stmt = $pdo->query("SELECT Genre FROM genres");
             while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 //checks if current genre is asigned to current book and selects it if true
-                if(in_array($row['Genre'], $Arr_Genre)){$selected = htmlentities(' selected');}
+                if(in_array($row['Genre'], $Arr_Genres)){$selected = htmlentities(' selected');}
                 else {$selected = "";}
                 echo "<option value=" . htmlentities($row['Genre']) . $selected .  ">" . htmlentities($row['Genre']) . "</option>";
             }
@@ -151,9 +157,18 @@ while ($row = $Genres->fetch(PDO::FETCH_ASSOC)){
         </p>
 
         <p>Author:
-        <input type="text" name="author" value="<?= $author ?>"></p>
-        <p><input type="submit" value="Submit Changes"/>
-        <a href="account_management.php">Cancel</a></p>
+        <select name="author" multiple>
+            <?php
+            //turns all the genres in the table Genres to options in the select field
+            $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author FROM authors");
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                //checks if current genre is asigned to current book and selects it if true
+                if(in_array($row['Author'], $Arr_Authors)){$selected = htmlentities(' selected');}
+                else {$selected = "";}
+                echo "<option value=" . htmlentities($row['Author']) . $selected .  ">" . htmlentities($row['Author']) . "</option>";
+            }
+            ?>
+        </select>
     </form>
 
 </body>
