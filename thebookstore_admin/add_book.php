@@ -57,7 +57,7 @@ session_start();
         <label for="description">Description:</label>
         <textarea id="description" name="description"></textarea>
         <p><label for="release">Release:</label>
-        <input type="release" id="release" name="release"></p>
+        <input type="date" id="release" name="release"></p>
         <p><label for="available">Available:</label>
         <input type="radio" id="yes" name="available" value=1>
         <label for="yes">Yes</label>
