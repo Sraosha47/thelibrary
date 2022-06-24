@@ -15,7 +15,7 @@ session_start();
   <nav id="navbar" class="nav">
       <ul class="nav-list">
           <li><a href="account_management.php">Account Management</a></li>
-          <li><a href="library_management.php">Library</a></li>
+          <li><a href="library_management.php">Library Management</a></li>
           <li><a href="rentals.php">Rentals</a></li>
           <li><a href="index.php">Log Out</a></li>   
       </ul>
