@@ -24,36 +24,37 @@ session_start();
             unset($_SESSION['success']);
         }
         echo('<table border="1">'."\n");
-        echo "<tr><td>";
-        echo('Title');
-        echo("</td><td>");
-        echo('ISBN');
-        echo("</td><td>");
-        echo('Available');
-        echo("</td><td>");
-        echo('Action');
-        echo("</td></tr>\n");
+            echo "<tr><th>";
+            echo('Title');
+            echo("</th><th>");
+            echo('ISBN');
+            echo("</th><th>");
+            echo('Available');
+            echo("</th><th>");
+            echo('Action');
+            echo("</th></tr>\n");
         
-        $stmt = $pdo->query("SELECT Title, ISBN, Available, Book_ID FROM Books");
+            $stmt = $pdo->query("SELECT Title, ISBN, Available, Book_ID FROM Books");
 
-        while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
-            echo( "<tr><td>");
-            echo(htmlentities($row['Title']));
-            echo("</td><td>");
-            echo(htmlentities($row['ISBN']));
-            echo("</td><td>");
-            if($row['Available']) {
-                echo("Yes");
-            } else {
-                echo("No");
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
+                echo( "<tr><td>");
+                echo('<a href="book_description.php?Book_ID='.$row['Book_ID'].'">' . htmlentities($row['Title']) . '</a>');
+                echo("</td><td>");
+                echo(htmlentities($row['ISBN']));
+                echo("</td><td>");
+                if($row['Available']) {
+                    echo("Yes");
+                } else {
+                    echo("No");
+                }
+                echo("</td><td>");
+                echo('<a href="book_description.php?Book_ID='.$row['Book_ID'].'">Edit</a>');
+                echo("</td></tr>\n");
             }
-            echo("</td><td>");
-            echo('<a href="edit_user.php?Book_ID='.$row['Book_ID'].'">Edit</a> / ');
-            echo('<a href="delete_user.php?Book_ID='.$row['Book_ID'].'">Remove</a>');
+            echo( "<tr style='text-align:center'><td colspan='4'>");
+            echo("<a href='add_book.php'>Add New Book</a>");
             echo("</td></tr>\n");
-        }
-        echo("<a href='add_book.php'>Add New Book</a>");
-
+        echo("</table>")
     ?>
 
     
