@@ -5,7 +5,7 @@ session_start();
      && isset($_POST['release']) && isset($_POST['id']) ) {
 
     // Data validation
-    if ( strlen($_POST['title']) < 1 || strlen($_POST['release']) < 1) {
+    if ( strlen($_POST['title']) < 1 || strlen($_POST['description']) < 1) {
         $_SESSION['error'] = 'Missing data';
         header("Location: book_description.php?Book_ID=".$_POST['Book_ID']);
         return;
@@ -84,8 +84,23 @@ $available = htmlentities($row['Available']);
 $genre = htmlentities($row['Genre']);
 $author = htmlentities($row['Author']);
 $book = $row['Book_ID'];
-?>
 
+//array containing all Genres associated with the book
+$Arr_Genre = array();
+$Genres = $pdo->prepare(
+    "SELECT g.Genre from books b
+    JOIN genres_books gb
+        on gb.Book_FK = b.Book_ID
+    Join genres g
+        on g.Genre_ID = gb.Genre_FK
+    where b.Book_ID = :ID
+    ");
+$Genres->execute(array(":ID" => $_GET['Book_ID']));
+
+while ($row = $Genres->fetch(PDO::FETCH_ASSOC)){
+    array_push($Arr_Genre, $row['Genre']);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -121,7 +136,20 @@ $book = $row['Book_ID'];
         <input type="radio" id="no" name="available" <?php if(!$available) {echo("checked");} ?> value=0>
         <label for="no">No</label></p>
         <p>Genre:
-        <input type="text" name="genre" value="<?= $genre ?>"></p>
+        <select name="genre" multiple>
+            <?php
+            //turns all the genres in the table Genres to options in the select field
+            $stmt = $pdo->query("SELECT Genre FROM genres");
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                //checks if current genre is asigned to current book and selects it if true
+                if(in_array($row['Genre'], $Arr_Genre)){$selected = htmlentities(' selected');}
+                else {$selected = "";}
+                echo "<option value=" . htmlentities($row['Genre']) . $selected .  ">" . htmlentities($row['Genre']) . "</option>";
+            }
+            ?>
+        </select>
+        </p>
+
         <p>Author:
         <input type="text" name="author" value="<?= $author ?>"></p>
         <p><input type="submit" value="Submit Changes"/>
