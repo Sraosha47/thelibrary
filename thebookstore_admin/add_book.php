@@ -55,7 +55,7 @@ session_start();
         }
     ?>
 
-    <h1>New Account</h1>
+    <h1>New Book</h1>
     <form method="post">
         <p><label for="title">Title:</label>
         <input type="text" id="title" name="title"></p>
