@@ -12,7 +12,14 @@ session_start();
     <title>The Bookstore|New Book</title>
 </head>
 <body>
-
+    <nav id="navbar" class="nav">
+        <ul class="nav-list">
+            <li><a href="account_management.php">Account Management</a></li>
+            <li><a href="library_management.php">Library</a></li>
+            <li><a href="rentals.php">Rentals</a></li>
+            <li><a href="index.php">Log Out</a></li>   
+        </ul>
+    </nav>
     <?php
         if ( isset($_POST['title'])  
             && isset($_POST['isbn']) 

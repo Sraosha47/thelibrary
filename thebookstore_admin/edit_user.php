@@ -91,6 +91,16 @@ $account = $row['Account_ID'];
     <title>The Bookstore|Edit Account</title>
 </head>
 <body>
+
+    <nav id="navbar" class="nav">
+        <ul class="nav-list">
+            <li><a href="account_management.php">Account Management</a></li>
+            <li><a href="library_management.php">Library</a></li>
+            <li><a href="rentals.php">Rentals</a></li>
+            <li><a href="index.php">Log Out</a></li>   
+        </ul>
+    </nav>
+
     <h1>Edit Account</h1>
     <form method="post">
         <input type="hidden" name="id" value="<?= $account ?>">
