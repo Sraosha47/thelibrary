@@ -6,20 +6,12 @@ if ( isset($_POST['title']) && isset($_POST['descr']) && isset($_POST['isbn'])
      && isset($_POST['release']) && isset($_POST['id']) ) {
 
     // Data validation
-    /*if ( strlen($_POST['title']) < 1 || strlen($_POST['descr']) < 1) {
+    if ( strlen($_POST['title']) < 1 || strlen($_POST['descr']) < 1) {
         $_SESSION['error'] = 'Missing data';
         header("Location: library_management.php");
         exit;
-    }*/
+    }
 
-   /* $del_genres = "DELETE FROM genres_books where Book_FK like :Book_ID;
-INSERT INTO genres_books (Genre_FK, Book_FK) VALUES (SELECT Genre_ID FROM genres where genre like :genres;   
-    ";
-    $chngGenre = $pdo->prepare($del_genres);
-    $chngGenre->execute(array(
-        ':Book_id' => $_POST['id'],
-        ':genres' => $_POST['genre']
-    ));*/
     $sql = "UPDATE books SET 
             Title = :title,
             Description = :descr,
@@ -139,35 +131,6 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         <label for="yes">Yes</label>
         <input type="radio" id="no" name="available" <?php if(!$available) {echo("checked");} ?> value=0>
         <label for="no">No</label></p>
-        <!--<p>Genre:
-        <select name="genre" multiple>
-            <php 
-            //turns all the genres in the table Genres to options in the select field
-            $stmt = $pdo->query("SELECT Genre FROM genres");
-            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                //checks if current genre is asigned to current book and selects it if true
-                if(in_array($row['Genre'], $Arr_Genres)){$selected = htmlentities(' selected');}
-                else {$selected = "";}
-                echo "<option value=" . htmlentities($row['Genre']) . $selected .  ">" . htmlentities($row['Genre']) . "</option>";
-            } 
-            ?>
-        </select>
-        </p>
-
-        <p>Author:
-        <select name="author" multiple>
-            <php 
-            //turns all the genres in the table Genres to options in the select field
-            $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author FROM authors");
-            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                //checks if current genre is asigned to current book and selects it if true
-                if(in_array($row['Author'], $Arr_Authors)){$selected = htmlentities(' selected');}
-                else {$selected = "";}
-                echo "<option value=" . htmlentities($row['Author']) . $selected .  ">" . htmlentities($row['Author']) . "</option>";
-            } 
-            ?>
-        </select>
-        </p>-->
         <p><input type="submit" value="Update"/>
         <a href="library_management.php">Cancel</a></p>
     </form>
