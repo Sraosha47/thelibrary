@@ -154,8 +154,6 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             echo("<tr><td>\n");
             echo($author);
             echo("</td><td>");
-
-            
             echo('<a href="remove_author.php?A_B_ID='.$result['Entry'].'">Remove</a>');
             echo("</td></tr>");
         }
