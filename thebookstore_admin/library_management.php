@@ -1,6 +1,61 @@
 <?php
 require_once "pdo.php";
 session_start();
+
+if ( isset($_POST['title'])  
+&& isset($_POST['isbn']) 
+&& isset($_POST['description'])){
+
+// Data validation
+    if ( strlen($_POST['title']) < 1 || strlen($_POST['release']) < 1) {
+    $_SESSION['error'] = 'Missing data';
+    header("Location: library_management.php");
+    return;
+    }
+
+    $sql = "INSERT INTO books(Title, ISBN, Description, Release_Date, Available)
+        VALUES (:title, :isbn, :description, :release, :available)";
+    $add_book = $pdo->prepare($sql);
+    $add_book->execute(array(
+    ':title' => $_POST['title'],
+    ':isbn' => $_POST['isbn'],
+    ':description' => $_POST['description'],
+    ':release' => $_POST['release'],
+    ':available' => $_POST['available']
+    ));
+    $_SESSION['success'] = $_POST['title'].' added to the library';
+    header( 'Location: library_management.php' ) ;
+    return;
+    }
+if ( isset($_POST['first_name'])  
+&& isset($_POST['last_name'])){
+    if ( strlen($_POST['first_name']) < 1 || strlen($_POST['last_name']) < 1) {
+        $_SESSION['error'] = 'Missing data';
+        header("Location: library_management.php");
+        return;
+        }
+
+        $sql = "INSERT INTO authors(First_Name, Last_Name)
+            VALUES (:first_name, :last_name)";
+        $add_author = $pdo->prepare($sql);
+        $add_author->execute(array(
+            ':first_name' => $_POST['first_name'],
+            ':last_name' => $_POST['last_name']
+        ));
+        $_SESSION['success'] = $_POST['first_name'].' '.$_POST['last_name'].' added to Authors';
+        header( 'Location: library_management.php' );
+        return;
+    }    
+
+
+// Flash pattern
+if ( isset($_SESSION['error']) ) {
+echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+unset($_SESSION['error']);
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -32,6 +87,7 @@ session_start();
             echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
             unset($_SESSION['success']);
         }
+        echo('<h2>Books</h2>');
         echo('<table border="1">'."\n");
             echo "<tr><th>";
             echo('Title');
@@ -61,42 +117,10 @@ session_start();
                 echo("</td></tr>\n");
             }
         echo("</table>");
-
-        if ( isset($_POST['title'])  
-            && isset($_POST['isbn']) 
-            && isset($_POST['description'])
-        ) {
-
-        // Data validation
-        if ( strlen($_POST['title']) < 1 || strlen($_POST['release']) < 1) {
-        $_SESSION['error'] = 'Missing data';
-        header("Location: add_book.php");
-        return;
-        }
-
-        $sql = "INSERT INTO books(Title, ISBN, Description, Release_Date, Available)
-                VALUES (:title, :isbn, :description, :release, :available)";
-        $add_book = $pdo->prepare($sql);
-        $add_book->execute(array(
-        ':title' => $_POST['title'],
-        ':isbn' => $_POST['isbn'],
-        ':description' => $_POST['description'],
-        ':release' => $_POST['release'],
-        ':available' => $_POST['available']
-        ));
-        $_SESSION['success'] = 'Book Added';
-        header( 'Location: library_management.php' ) ;
-        return;
-        }
-
-        // Flash pattern
-        if ( isset($_SESSION['error']) ) {
-        echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
-        unset($_SESSION['error']);
-        }
     ?>
+    
 
-    <h2>Add New Book</h2>
+    <h3>Add New Book</h3>
     <form method="post">
         <p><label for="title">Title:</label>
         <input type="text" id="title" name="title"></p>
@@ -114,7 +138,37 @@ session_start();
         <p><input type="submit" value="Add"/>
         <a href="library_management.php">Cancel</a></p>
     </form>
+<?php
+    echo('<h2>Authors</h2>');
+        echo('<table border="1">'."\n");
+            echo "<tr><th>";
+            echo('Name');
+            echo("</th><th>");
+            echo('Action');
+            echo("</th></tr>\n");
+        
+            $stmt = $pdo->query("SELECT Author_ID, concat(First_Name, ' ', Last_name) AS Author FROM Authors");
 
-    
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
+                echo( "<tr><td>");
+                echo(htmlentities($row['Author']));
+                echo("</td><td>");
+                echo('<a href="delete_author.php?Book_ID='.$row['Author_ID'].'">Delete</a>');
+                echo("</td></tr>\n");
+            }
+        echo("</table>");
+    ?>
+
+    <h2>Add New Author</h2>
+    <form method="post">
+        <p><label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name"></p>
+        <p><label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name"></p>
+        <p><input type="submit" value="Add"/>
+        <a href="library_management.php">Cancel</a></p>
+    </form>
+
+
 </body>
 </html>
