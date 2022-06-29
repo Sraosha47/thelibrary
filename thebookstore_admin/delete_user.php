@@ -23,19 +23,19 @@ session_start();
 
   <?php
     if ( isset($_POST['delete']) && isset($_POST['Account_ID']) ) {
-      $sql = "DELETE FROM Accounts WHERE Account_ID = :zip";
+      $sql = "DELETE FROM Accounts WHERE Account_ID like :zip";
       $stmt = $pdo->prepare($sql);
       $stmt->execute(array(':zip' => $_POST['Account_ID']));
       $_SESSION['success'] = 'Record deleted';
       header( 'Location: account_management.php' ) ;
-      return;
+      exit;
     }
 
     // Guardian: Make sure that Account_ID is present
     if ( ! isset($_GET['Account_ID']) ) {
       $_SESSION['error'] = "Missing Account_ID";
       header('Location: account_management.php');
-      return;
+      exit;
     }
 
     $stmt = $pdo->prepare("SELECT First_Name, Last_Name, Account_ID FROM Accounts WHERE Account_ID = :xyz");
@@ -44,7 +44,7 @@ session_start();
     if ( $row === false ) {
       $_SESSION['error'] = 'Bad value for Account_ID';
       header( 'Location: index.php' ) ;
-      return;
+      exit;
     }
   ?>
   <p>Confirm: Deleting <?= htmlentities($row['First_Name']) . " " . htmlentities($row['Last_Name'])?></p>

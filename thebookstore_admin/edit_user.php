@@ -10,13 +10,13 @@ if ( isset($_POST['fname']) && isset($_POST['lname']) && isset($_POST['email'])
     if ( strlen($_POST['fname']) < 1 || strlen($_POST['password']) < 1) {
         $_SESSION['error'] = 'Missing data';
         header("Location: edit.php?Account_ID=".$_POST['Account_ID']);
-        return;
+        exit;
     }
 
     if ( strpos($_POST['email'],'@') === false ) {
         $_SESSION['error'] = 'Bad data';
         header("Location: edit.php?Account_ID=".$_POST['Account_ID']);
-        return;
+        exit;
     }
 
     $sql = "UPDATE accounts SET 
@@ -27,7 +27,7 @@ if ( isset($_POST['fname']) && isset($_POST['lname']) && isset($_POST['email'])
             Phone = :phone,
             Street = :address,
             Postal_FK = (Select Postal_ID From postal_codes where Code like :code && Town like :town)
-            WHERE Account_ID = :Account_ID";
+            WHERE Account_ID = :Account_ID;";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(
         ':fname' => $_POST['fname'],
@@ -40,15 +40,15 @@ if ( isset($_POST['fname']) && isset($_POST['lname']) && isset($_POST['email'])
         ':code' => $_POST['code'],
         ':Account_ID' => $_POST['id']));
     $_SESSION['success'] = 'Record updated';
-    header( 'Location: account_management.php' );
-    return;
+    header("Location: account_management.php");
+    exit;
 }
 
 // Guardian: Make sure that Account_ID is present
 if ( ! isset($_GET['Account_ID']) ) {
   $_SESSION['error'] = "Missing Account_ID";
   header('Location: index.php');
-  return;
+  exit;
 }
 
 $stmt = $pdo->prepare(
@@ -62,7 +62,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if ( $row === false ) {
     $_SESSION['error'] = 'Bad value for Account_ID';
     header( 'Location: account_management.php' ) ;
-    return;
+    exit;
 }
 
 // Flash pattern
