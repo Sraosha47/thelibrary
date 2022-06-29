@@ -104,8 +104,6 @@ $Authors->execute(array(":ID" => $_GET['Book_ID']));
 while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     array_push($Arr_Authors, $row['Author']);
 }
-/*$genre = htmlentities($row['Genre']);
-$author = htmlentities($row['Author']);*/
 ?>
 
 <!DOCTYPE html>
@@ -114,7 +112,7 @@ $author = htmlentities($row['Author']);*/
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bookstore|Book Description</title>
+    <title>TB | Book Description</title>
 </head>
 <body>
     <nav id="navbar" class="nav">

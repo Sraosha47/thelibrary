@@ -9,7 +9,7 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bookstore|Account Management</title>
+    <title>TB | Account Management</title>
 </head>
 <body>
     <nav id="navbar" class="nav">
@@ -112,7 +112,7 @@ session_start();
 
     ?>
 
-    <h2>New Account</h2>
+    <h2>Add New Account</h2>
 
     <form method="post">
         <p><label for="fname">First Name:</label>
