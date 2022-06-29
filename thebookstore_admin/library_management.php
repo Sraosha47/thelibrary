@@ -9,7 +9,7 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bookstore|Library Management</title>
+    <title>TB | Library Management</title>
 </head>
 <body>
 
@@ -60,11 +60,60 @@ session_start();
                 echo('<a href="book_description.php?Book_ID='.$row['Book_ID'].'">Edit</a>');
                 echo("</td></tr>\n");
             }
-            echo( "<tr style='text-align:center'><td colspan='4'>");
-            echo("<a href='add_book.php'>Add New Book</a>");
-            echo("</td></tr>\n");
-        echo("</table>")
+        echo("</table>");
+
+        if ( isset($_POST['title'])  
+            && isset($_POST['isbn']) 
+            && isset($_POST['description'])
+        ) {
+
+        // Data validation
+        if ( strlen($_POST['title']) < 1 || strlen($_POST['release']) < 1) {
+        $_SESSION['error'] = 'Missing data';
+        header("Location: add_book.php");
+        return;
+        }
+
+        $sql = "INSERT INTO books(Title, ISBN, Description, Release_Date, Available)
+                VALUES (:title, :isbn, :description, :release, :available)";
+        $add_book = $pdo->prepare($sql);
+        $add_book->execute(array(
+        ':title' => $_POST['title'],
+        ':isbn' => $_POST['isbn'],
+        ':description' => $_POST['description'],
+        ':release' => $_POST['release'],
+        ':available' => $_POST['available']
+        ));
+        $_SESSION['success'] = 'Book Added';
+        header( 'Location: library_management.php' ) ;
+        return;
+        }
+
+        // Flash pattern
+        if ( isset($_SESSION['error']) ) {
+        echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+        unset($_SESSION['error']);
+        }
     ?>
+
+    <h2>Add New Book</h2>
+    <form method="post">
+        <p><label for="title">Title:</label>
+        <input type="text" id="title" name="title"></p>
+        <p><label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn"></p>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+        <p><label for="release">Release:</label>
+        <input type="date" id="release" name="release"></p>
+        <p><label for="available">Available:</label>
+        <input type="radio" id="yes" name="available" value=1>
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="available" value=0>
+        <label for="no">No</label></p>
+        <p><input type="submit" value="Add"/>
+        <a href="library_management.php">Cancel</a></p>
+    </form>
 
     
 </body>
