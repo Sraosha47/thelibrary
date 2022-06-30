@@ -151,9 +151,8 @@ if ( isset($_SESSION['error']) ) {
         <label for="yes">Yes</label>
         <input type="radio" id="no" name="admin" value=0>
         <label for="no">No</label></p>
-        <p><input type="submit" value="Add"/>
-        <a href="account_management.php">Cancel</a></p>
-        
+        <p class="buttons"><input type="submit" value="Add"/>
+        <button type="reset">Cancel</button></p>
     </form>
     </section>
 </body>

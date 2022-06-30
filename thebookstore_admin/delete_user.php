@@ -50,15 +50,17 @@ if ( $row === false ) {
           <li><a href="index.php">Log Out</a></li>   
       </ul>
     </nav>
-
+<section class="tables">
   <p>Confirm: Deleting <?= htmlentities($row['First_Name']) . " " . htmlentities($row['Last_Name'])?></p>
 
   <form method="post">
   <input type="hidden" name="Account_ID" value="<?= $row['Account_ID'] ?>">
-  <input type="submit" value="Delete" name="delete">
-  <a href="account_management.php">Cancel</a>
+  <p class="buttons">
+    <input type="submit" value="Delete" name="delete">
+    <a class="button" href="account_management.php">Cancel</a>
+  </p>  
   </form>
-
+</section>
 </body>
 </html>
 

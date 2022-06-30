@@ -122,8 +122,8 @@ $account = $row['Account_ID'];
         <input type="text" name="code" value="<?= $code ?>"></p>
         <p>Town:
         <input type="text" name="town" value="<?= $town ?>"></p>
-        <p><input type="submit" value="Submit Changes"/>
-        <a href="account_management.php">Cancel</a></p>
+        <p class="buttons"><input type="submit" value="Submit Changes"/>
+        <button type="reset">Cancel</button></p></p>
     </form>
     </section>
 </body>

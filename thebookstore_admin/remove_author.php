@@ -46,6 +46,7 @@ if ( $row === false ) {
 </head>
 <body>
 
+<section class="tables">
   <nav id="navbar" class="nav">
       <ul class="nav-list">
           <li><a href="account_management.php">Account Management</a></li>
@@ -60,9 +61,9 @@ if ( $row === false ) {
   <form method="post">
   <input type="hidden" name="A_B_ID" value="<?= $row['Authors_Books_ID'] ?>">
   <input type="submit" value="Delete" name="delete">
-  <a href="library_management.php">Cancel</a>
+  <a class="button" href="library_management.php">Cancel</a>
   </form>
-
+</section>
 </body>
 </html>
 

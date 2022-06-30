@@ -49,15 +49,17 @@ if ( $row === false ) {
           <li><a href="index.php">Log Out</a></li>   
       </ul>
     </nav>
-
+<section class="tables">
   <p>Confirm: Deleting <?= htmlentities($row['First_Name']) . " " . htmlentities($row['Last_Name'])?></p>
 
   <form method="post">
   <input type="hidden" name="Author_ID" value="<?= $row['Author_ID'] ?>">
-  <input type="submit" value="Delete" name="delete">
-  <a href="library_management.php">Cancel</a>
-  </form>
-
+  <p class="buttons">
+    <input type="submit" value="Delete" name="delete">
+    <a class="button" href="library_management.php">Cancel</a>
+  </p>  
+</form>
+</section>
 </body>
 </html>
 
