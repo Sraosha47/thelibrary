@@ -65,6 +65,21 @@ $release = htmlentities($row['Release_Date']);
 $available = htmlentities($row['Available']);
 $book = $row['Book_ID'];
 
+
+//Update Genres
+if ( isset($_POST['genres'])) {
+
+    $sql = "INSERT INTO genres_books(Genre_FK, Book_FK) VALUES (:genre, :book); ";
+    $upd_authors = $pdo->prepare($sql);
+    $upd_authors->execute(array(
+        ':genre' => $_POST['genres'],
+        ':book' => $book
+        ));
+    $_SESSION['success'] = 'Authors updated';
+    header( 'Location: book_description.php?Book_ID='.$book.'#auth_gen' );
+    exit;
+}
+
 //array containing all Genres associated with the book
 $Arr_Genres = array();
 $Genres = $pdo->prepare(
@@ -241,15 +256,16 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     </section>
 
     <section class="sections">
+
     <!-- genre form -->
     <form method="POST">
         <p><label for="genres">Genres:</label>
             <select name="genres">
                 <?php 
                 //turns all the genres in the table Genres to options in the select field
-                $stmt = $pdo->query("SELECT Genre FROM genres");
+                $stmt = $pdo->query("SELECT Genre, Genre_ID FROM genres");
                 while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                    echo "<option value=''>" . htmlentities($row['Genre']) . "</option>";
+                    echo "<option value=".htmlentities($row['Genre_ID']).">" . htmlentities($row['Genre']) . "</option>";
                 } 
                 ?>
             </select>
