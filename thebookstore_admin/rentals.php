@@ -9,6 +9,7 @@ if($_SESSION['admin'] === false){
     exit;
   }
   
+
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +31,51 @@ if($_SESSION['admin'] === false){
             <li><a href="index.php">Log Out</a></li>   
         </ul>
     </nav>
-    
+<section class="tables">
+<?php
+    echo('<h1>Rentals</h1>');
+
+    if ( isset($_SESSION['error']) ) {
+            echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+            unset($_SESSION['error']);
+        }
+        if ( isset($_SESSION['success']) ) {
+            echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
+            unset($_SESSION['success']);
+        }
+        echo('<table border="1">'."\n");
+            echo("<tr><th>");
+            echo('Due Date');
+            echo("</th><th>");
+            echo('Name');
+            echo("</th><th>");
+            echo('Book');
+            echo("</th><th>");
+            echo('Action');
+            echo("</th></tr>\n");
+            $stmt = $pdo->query(
+                "SELECT r.Due_Date AS Date, a.Account_ID AS ID, concat(a.First_Name, ' ', a.Last_Name) AS Name, b.Title AS Book 
+                FROM rentals r
+                JOIN accounts a
+                    ON r.Account_FK = a.Account_ID
+                JOIN books b
+                    ON r.Book_FK = b.Book_ID
+                WHERE r.Return_Date = 0
+                ORDER BY Date");
+
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
+                echo("<tr><td>");
+                echo(htmlentities($row['Date']));
+                echo("</td><td>");
+                echo(htmlentities($row['Name']));
+                echo("</td><td>");
+                echo(htmlentities($row['Book']));
+                echo("</td><td>");
+                echo('<a href="edit_user.php?Account_ID='.$row['ID'].'">Edit</a>');
+                echo("</td></tr>\n");
+            }
+        echo("</table>");
+?>
+</section>
 </body>
 </html>
