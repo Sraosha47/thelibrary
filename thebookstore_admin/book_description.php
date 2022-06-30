@@ -145,10 +145,10 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <li><a href="library_management.php">Library Management</a></li>
             <li><a href="rentals.php">Rentals</a></li>
             <li><a href="index.php">Log Out</a></li>
-            <div class="modnav">
+        </ul>    
+        <ul class="modnav">
             <li><a href="#basic">Basic Info</a></li>
-            <li><a href="#auth_gen">Authors & Genres</a></li>
-            </div>   
+            <li><a href="#auth_gen">Authors & Genres</a></li>  
         </ul>
     </nav>
     <section class="tables" id="basic">

@@ -130,11 +130,10 @@ $account = $row['Account_ID'];
             <li><a href="library_management.php">Library Management</a></li>
             <li><a href="rentals.php">Rentals</a></li>
             <li><a href="index.php">Log Out</a></li>   
-            <div class="modnav"> 
+        </ul>    
+        <ul class="modnav"> 
                 <li><a href="#info">Account Information</a></li>
                 <li><a href="#rentals">Rentals</a></li> 
-            </div>
-
         </ul>
     </nav>
     <section class="tables" id="info">

@@ -67,16 +67,16 @@ if ( isset($_SESSION['error']) ) {
 </head>
 <body>
     <nav id="navbar" class="nav">
-    <ul class="nav-list">
-        <li><a href="account_management.php">Account Management</a></li>
-        <li><a href="library_management.php">Library Management</a></li>
-        <li><a href="rentals.php">Rentals</a></li>
-        <li><a href="index.php">Log Out</a></li> 
-        <div class="modnav"> 
-        <li><a href="#accounts">Accounts</a></li>
-        <li><a href="#formfields">Add New Account</a></li> 
-        </div>
-    </ul>
+        <ul class="nav-list">
+            <li><a href="account_management.php">Account Management</a></li>
+            <li><a href="library_management.php">Library Management</a></li>
+            <li><a href="rentals.php">Rentals</a></li>
+            <li><a href="index.php">Log Out</a></li> 
+        </ul>
+        <ul class="modnav"> 
+            <li><a href="#accounts">Accounts</a></li>
+            <li><a href="#formfields">Add New Account</a></li> 
+        </ul>
     </nav>
 
     <section class="tables" id="accounts">
