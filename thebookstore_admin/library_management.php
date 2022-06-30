@@ -2,6 +2,12 @@
 require_once "pdo.php";
 session_start();
 
+if($_SESSION['admin'] === false){
+    $_SESSION['error'] = 'You shall not pass!';
+    header('Location: index.php');
+    exit;
+}
+
 if ( isset($_POST['title'])  
 && isset($_POST['isbn']) 
 && isset($_POST['description'])){
