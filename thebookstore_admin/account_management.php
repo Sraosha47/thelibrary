@@ -128,9 +128,6 @@ if ( isset($_SESSION['error']) ) {
                 echo("</td></tr>\n");
             }
         echo("</table>");
-
-
-
     ?>
     </section>
     <section class="tables" id="formfields">
