@@ -2,12 +2,22 @@
 require_once "pdo.php";
 session_start();
 
+
+
+
 if ( isset($_POST['delete']) && isset($_POST['A_B_ID']) ) {
   $sql = "DELETE FROM Authors_Books WHERE Authors_Books_ID like :zip";
   $stmt = $pdo->prepare($sql);
   $stmt->execute(array(':zip' => $_POST['A_B_ID']));
-  $_SESSION['success'] = 'Record deleted';
-  header( 'Location: library_management.php' ) ;
+/*
+  $stmt = $pdo->prepare(
+    "SELECT book_fk FROM authors_books
+    WHERE Authors_Books_ID = :ID;");
+  $stmt->execute(array(":ID" => $_GET['A_B_ID']));
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  $book = $row['book_fk'];*/
+  $_SESSION['success'] = 'Author removed';
+  header( 'Location: book_description.php?Book_ID='.$row['book_fk'] ) ;
   return;
 }
 
@@ -60,7 +70,7 @@ if ( $row === false ) {
 
   <form method="post">
   <input type="hidden" name="A_B_ID" value="<?= $row['Authors_Books_ID'] ?>">
-  <input type="submit" value="Delete" name="delete">
+  <input type="submit" value="Remove" name="delete">
   <a class="button" href="library_management.php">Cancel</a>
   </form>
 </section>

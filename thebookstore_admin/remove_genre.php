@@ -6,7 +6,7 @@ if ( isset($_POST['delete']) && isset($_POST['G_B_ID']) ) {
   $sql = "DELETE FROM Genres_Books WHERE Genres_Books_ID like :zip";
   $stmt = $pdo->prepare($sql);
   $stmt->execute(array(':zip' => $_POST['G_B_ID']));
-  $_SESSION['success'] = 'Record deleted';
+  $_SESSION['success'] = 'Genre Removed';
   header( 'Location: library_management.php' ) ;
   return;
 }
@@ -59,7 +59,7 @@ if ( $row === false ) {
 
   <form method="post">
   <input type="hidden" name="G_B_ID" value="<?= $row['Genres_Books_ID'] ?>">
-  <input type="submit" value="Delete" name="delete">
+  <input type="submit" value="Remove" name="delete">
   <a class="button" href="library_management.php">Cancel</a>
   </form>
 </section>
