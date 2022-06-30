@@ -88,6 +88,8 @@ $account = $row['Account_ID'];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/libstyle.css">
     <title>TB | Edit Account</title>
 </head>
 <body>
@@ -100,7 +102,7 @@ $account = $row['Account_ID'];
             <li><a href="index.php">Log Out</a></li>   
         </ul>
     </nav>
-
+    <section class="tables">
     <h1>Edit Account</h1>
     <form method="post">
         <input type="hidden" name="id" value="<?= $account ?>">
@@ -123,5 +125,6 @@ $account = $row['Account_ID'];
         <p><input type="submit" value="Submit Changes"/>
         <a href="account_management.php">Cancel</a></p>
     </form>
+    </section>
 </body>
 </html>

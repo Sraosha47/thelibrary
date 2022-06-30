@@ -64,6 +64,8 @@ unset($_SESSION['error']);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/libstyle.css">
     <title>TB | Library Management</title>
 </head>
 <body>
@@ -73,11 +75,31 @@ unset($_SESSION['error']);
             <li><a href="account_management.php">Account Management</a></li>
             <li><a href="library_management.php">Library Management</a></li>
             <li><a href="rentals.php">Rentals</a></li>
-            <li><a href="index.php">Log Out</a></li>   
+            <li><a href="index.php">Log Out</a></li>
+            <div class="modnav">
+                <div class="dropdown">    
+                <li><a href="#books" >Books</a></li>
+                    <div class="dropdown-content">
+                    <li><a href="#newbook" >Add Book</a></li>
+                    </div>
+                </div>
+                <div class="dropdown">
+                <li><a href="#authors" class="dropdown">Authors</a></li>
+                    <div class="dropdown-content">
+                    <li><a href="#newauthor" >Add Author</a></li>
+                    </div>
+                </div>
+                <div class="dropdown">
+                <li><a href="#genres" class="dropdown">Genres</a></li>
+                    <div class="dropdown-content">
+                    <li><a href="#newgenre" >Add Genre</a></li>
+                    </div>
+                </div>
+            </div>   
         </ul>
     </nav>
+<section id="books" class="tables">
     <h1>Library Management</h1>
-
     <?php
         if ( isset($_SESSION['error']) ) {
             echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
@@ -99,7 +121,10 @@ unset($_SESSION['error']);
             echo('Action');
             echo("</th></tr>\n");
         
-            $stmt = $pdo->query("SELECT Title, ISBN, Available, Book_ID FROM Books");
+            $stmt = $pdo->query(
+                "SELECT Title, ISBN, Available, Book_ID 
+                FROM Books
+                ORDER BY Title");
 
             while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
                 echo( "<tr><td>");
@@ -118,8 +143,9 @@ unset($_SESSION['error']);
             }
         echo("</table>");
     ?>
-    
+</section>
 
+<section class="tables" id="newbook">
     <h3>Add New Book</h3>
     <form method="post">
         <p><label for="title">Title:</label>
@@ -138,27 +164,43 @@ unset($_SESSION['error']);
         <p><input type="submit" value="Add"/>
         <a href="library_management.php">Cancel</a></p>
     </form>
+</section>
+
+
+<section class="tables" id="authors">
+    <div class="tables">
 <?php
     echo('<h2>Authors</h2>');
         echo('<table border="1">'."\n");
             echo "<tr><th>";
-            echo('Name');
+            echo('Last Name');
+            echo("</th><th>");
+            echo('First Name');
             echo("</th><th>");
             echo('Action');
             echo("</th></tr>\n");
         
-            $stmt = $pdo->query("SELECT Author_ID, concat(First_Name, ' ', Last_name) AS Author FROM Authors");
+            $stmt = $pdo->query(
+                "SELECT Author_ID, First_Name, Last_Name, concat(First_Name, ' ', Last_name) AS Author 
+                FROM Authors
+                ORDER BY Last_Name");
 
             while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
                 echo( "<tr><td>");
-                echo(htmlentities($row['Author']));
+                echo(htmlentities($row['Last_Name']));
                 echo("</td><td>");
-                echo('<a href="delete_author.php?Book_ID='.$row['Author_ID'].'">Delete</a>');
+                echo(htmlentities($row['First_Name']));
+                echo("</td><td>");
+                echo('<a href="delete_author.php?Author_ID='.$row['Author_ID'].'">Delete</a>');
                 echo("</td></tr>\n");
             }
         echo("</table>");
     ?>
+    </div>
+    </section>
 
+    <section class="tables" id="newauthor">
+    <div class="tables">
     <h2>Add New Author</h2>
     <form method="post">
         <p><label for="first_name">First Name:</label>
@@ -168,7 +210,13 @@ unset($_SESSION['error']);
         <p><input type="submit" value="Add"/>
         <a href="library_management.php">Cancel</a></p>
     </form>
+    </div>
+</section>
 
+<section class="tables" id="genres">
+<h2>Genres</h2>
+
+</section>
 
 </body>
 </html>

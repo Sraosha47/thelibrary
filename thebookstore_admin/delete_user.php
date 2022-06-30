@@ -1,6 +1,34 @@
 <?php
 require_once "pdo.php";
 session_start();
+
+//statement deleting the user
+if ( isset($_POST['delete']) && isset($_POST['Account_ID']) ) {
+  $sql = "DELETE FROM Accounts WHERE Account_ID like :zip";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(array(':zip' => $_POST['Account_ID']));
+  $_SESSION['success'] = 'Record deleted';
+  header( 'Location: account_management.php' ) ;
+  exit;
+}
+
+// Guardian: Make sure that Account_ID is present
+if ( ! isset($_GET['Account_ID']) ) {
+  $_SESSION['error'] = "Missing Account_ID";
+  header('Location: account_management.php');
+  exit;
+}
+
+//query getting data for the paragraph and the form
+$stmt = $pdo->prepare("SELECT First_Name, Last_Name, Account_ID FROM Accounts WHERE Account_ID = :xyz");
+$stmt->execute(array(":xyz" => $_GET['Account_ID']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if ( $row === false ) {
+  $_SESSION['error'] = 'Bad value for Account_ID';
+  header( 'Location: index.php' ) ;
+  exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,6 +36,8 @@ session_start();
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/libstyle.css">
   <title>TB | Delete User</title>
 </head>
 <body>
@@ -21,32 +51,6 @@ session_start();
       </ul>
     </nav>
 
-  <?php
-    if ( isset($_POST['delete']) && isset($_POST['Account_ID']) ) {
-      $sql = "DELETE FROM Accounts WHERE Account_ID like :zip";
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute(array(':zip' => $_POST['Account_ID']));
-      $_SESSION['success'] = 'Record deleted';
-      header( 'Location: account_management.php' ) ;
-      exit;
-    }
-
-    // Guardian: Make sure that Account_ID is present
-    if ( ! isset($_GET['Account_ID']) ) {
-      $_SESSION['error'] = "Missing Account_ID";
-      header('Location: account_management.php');
-      exit;
-    }
-
-    $stmt = $pdo->prepare("SELECT First_Name, Last_Name, Account_ID FROM Accounts WHERE Account_ID = :xyz");
-    $stmt->execute(array(":xyz" => $_GET['Account_ID']));
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ( $row === false ) {
-      $_SESSION['error'] = 'Bad value for Account_ID';
-      header( 'Location: index.php' ) ;
-      exit;
-    }
-  ?>
   <p>Confirm: Deleting <?= htmlentities($row['First_Name']) . " " . htmlentities($row['Last_Name'])?></p>
 
   <form method="post">

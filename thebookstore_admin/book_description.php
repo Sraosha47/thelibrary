@@ -2,6 +2,7 @@
 require_once "pdo.php";
 session_start();
 
+//Update Book Data
 if ( isset($_POST['title']) && isset($_POST['descr']) && isset($_POST['isbn'])
      && isset($_POST['release']) && isset($_POST['id']) ) {
 
@@ -103,7 +104,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="libstyle.css">
+    <link rel="stylesheet" type="text/css" href="css/libstyle.css">
     <title>TB | Book Description</title>
 </head>
 <body>
@@ -112,10 +113,17 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <li><a href="account_management.php">Account Management</a></li>
             <li><a href="library_management.php">Library Management</a></li>
             <li><a href="rentals.php">Rentals</a></li>
-            <li><a href="index.php">Log Out</a></li>   
+            <li><a href="index.php">Log Out</a></li>
+            <div class="modnav">
+            <li><a href="#basic">Basic Info</a></li>
+            <li><a href="#auth_gen">Authors & Genres</a></li>
+            </div>   
         </ul>
     </nav>
+    <section class="tables" id="basic">
     <h1>Book Description</h1>
+
+    <h2>Basic Info</h2>
     <form method="post">
         <input type="hidden" name="id" value="<?= $book ?>">
         <p>Title:
@@ -134,8 +142,12 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         <p><input type="submit" value="Update"/>
         <a href="library_management.php">Cancel</a></p>
     </form>
+    </section>
 
+    <section class="tables" id="auth_gen">
+    <h2>Authors & Genres</h2>
     <?php 
+    //Authors Table
         echo('<table border="1">'."\n");
         echo("<tr><th>");
         echo('Authors');
@@ -159,6 +171,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         }
         echo("</table>");
 
+        //Genre Table
         echo('<table border="1">'."\n");
         echo("<tr><th>");
         echo('Genres');
@@ -184,7 +197,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         }
         echo("</table>");
     ?>
-
+    <!-- Author and Genre Forms -->
     <form method="post">
         <p>Author:
             <select name="author">
@@ -213,6 +226,6 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         </p>
         <p><input type="submit" value="Add Genre"/></p>
     </form>
-
+    </section>
 </body>
 </html>

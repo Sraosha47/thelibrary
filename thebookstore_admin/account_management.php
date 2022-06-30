@@ -1,6 +1,50 @@
 <?php
 require_once "pdo.php";
 session_start();
+
+if ( isset($_POST['fname'])  
+&& isset($_POST['lname']) 
+&& isset($_POST['email'])
+&& isset($_POST['password'])) {
+
+    // Data validation
+    if ( strlen($_POST['fname']) < 1 || strlen($_POST['password']) < 1) {
+    $_SESSION['error'] = 'Missing data';
+    header("Location: add_user.php");
+    return;
+    }
+
+    if ( strpos($_POST['email'],'@') === false ) {
+    $_SESSION['error'] = 'Bad data';
+    header("Location: add_user.php");
+    return;
+    }
+
+    $sql = "INSERT INTO accounts (First_Name, Last_Name, Email, Password, Phone, Street, Postal_FK, Admin)
+            VALUES (:fname, :lname, :email, :password, :phone, :address, (SELECT Postal_ID FROM postal_codes WHERE CODE LIKE :pcode && Town LIKE :town), :admin)";
+    $add_user = $pdo->prepare($sql);
+    $add_user->execute(array(
+    ':fname' => $_POST['fname'],
+    ':lname' => $_POST['lname'],
+    ':email' => $_POST['email'],
+    ':password' => $_POST['password'],
+    ':phone' => $_POST['phone'],
+    ':address' => $_POST['address'],
+    ':pcode' => $_POST['pcode'],
+    ':town' => $_POST['town'],
+    ':admin' => $_POST['admin']
+    ));
+    $_SESSION['success'] = 'Account Added';
+    header( 'Location: account_management.php' ) ;
+    return;
+}
+
+// Flash pattern
+if ( isset($_SESSION['error']) ) {
+    echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+    unset($_SESSION['error']);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +53,8 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/libstyle.css">
     <title>TB | Account Management</title>
 </head>
 <body>
@@ -17,12 +63,18 @@ session_start();
         <li><a href="account_management.php">Account Management</a></li>
         <li><a href="library_management.php">Library Management</a></li>
         <li><a href="rentals.php">Rentals</a></li>
-        <li><a href="index.php">Log Out</a></li>   
+        <li><a href="index.php">Log Out</a></li> 
+        <div class="modnav"> 
+        <li><a href="#accounts">Accounts</a></li>
+        <li><a href="#formfields">Add New Account</a></li> 
+        </div>
     </ul>
     </nav>
 
+    <section class="tables" id="accounts">
     <h1>Account Management</h1>
-
+    
+    <h2>Accounts</h2>
     <?php
         if ( isset($_SESSION['error']) ) {
             echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
@@ -34,9 +86,9 @@ session_start();
         }
         echo('<table border="1">'."\n");
             echo "<tr><th>";
-            echo('First_Name');
-            echo("</th><th>");
             echo('Last_Name');
+            echo("</th><th>");
+            echo('First_Name');
             echo("</th><th>");
             echo('Email');
             echo("</th><th>");
@@ -44,13 +96,16 @@ session_start();
             echo("</th><th>");
             echo('Action');
             echo("</th></tr>\n");
-            $stmt = $pdo->query("SELECT First_Name, Last_Name, Email, Admin, Account_ID FROM accounts");
+            $stmt = $pdo->query(
+                "SELECT First_Name, Last_Name, Email, Admin, Account_ID 
+                FROM accounts
+                ORDER BY Last_Name");
 
             while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
                 echo "<tr><td>";
-                echo(htmlentities($row['First_Name']));
-                echo("</td><td>");
                 echo(htmlentities($row['Last_Name']));
+                echo("</td><td>");
+                echo(htmlentities($row['First_Name']));
                 echo("</td><td>");
                 echo(htmlentities($row['Email']));
                 echo("</td><td>");
@@ -66,55 +121,15 @@ session_start();
             }
         echo("</table>");
 
-        if ( isset($_POST['fname'])  
-        && isset($_POST['lname']) 
-        && isset($_POST['email'])
-        && isset($_POST['password'])) {
-
-        // Data validation
-        if ( strlen($_POST['fname']) < 1 || strlen($_POST['password']) < 1) {
-        $_SESSION['error'] = 'Missing data';
-        header("Location: add_user.php");
-        return;
-        }
-
-        if ( strpos($_POST['email'],'@') === false ) {
-        $_SESSION['error'] = 'Bad data';
-        header("Location: add_user.php");
-        return;
-        }
-
-        $sql = "INSERT INTO accounts (First_Name, Last_Name, Email, Password, Phone, Street, Postal_FK, Admin)
-                VALUES (:fname, :lname, :email, :password, :phone, :address, (SELECT Postal_ID FROM postal_codes WHERE CODE LIKE :pcode && Town LIKE :town), :admin)";
-        $add_user = $pdo->prepare($sql);
-        $add_user->execute(array(
-        ':fname' => $_POST['fname'],
-        ':lname' => $_POST['lname'],
-        ':email' => $_POST['email'],
-        ':password' => $_POST['password'],
-        ':phone' => $_POST['phone'],
-        ':address' => $_POST['address'],
-        ':pcode' => $_POST['pcode'],
-        ':town' => $_POST['town'],
-        ':admin' => $_POST['admin']
-        ));
-        $_SESSION['success'] = 'Account Added';
-        header( 'Location: account_management.php' ) ;
-        return;
-    }
-
-        // Flash pattern
-        if ( isset($_SESSION['error']) ) {
-        echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
-        unset($_SESSION['error']);
-        }
 
 
     ?>
-
+    </section>
+    <section class="tables" id="formfields">
     <h2>Add New Account</h2>
-
-    <form method="post">
+    
+    <form method="post" class="new-account">
+        
         <p><label for="fname">First Name:</label>
         <input type="text" id="fname" name="fname"></p>
         <p><label for="lname">Last Name:</label>
@@ -138,6 +153,8 @@ session_start();
         <label for="no">No</label></p>
         <p><input type="submit" value="Add"/>
         <a href="account_management.php">Cancel</a></p>
+        
     </form>
+    </section>
 </body>
 </html>

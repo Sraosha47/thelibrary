@@ -1,13 +1,47 @@
 <?php
 require_once "pdo.php";
 session_start();
+
+if ( isset($_POST['delete']) && isset($_POST['A_B_ID']) ) {
+  $sql = "DELETE FROM Authors_Books WHERE Authors_Books_ID like :zip";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(array(':zip' => $_POST['A_B_ID']));
+  $_SESSION['success'] = 'Record deleted';
+  header( 'Location: library_management.php' ) ;
+  return;
+}
+
+// Guardian: Make sure that Account_ID is present
+if ( ! isset($_GET['A_B_ID']) ) {
+  $_SESSION['error'] = "Missing Authors_Books_ID";
+  header('Location: library_management.php');
+  return;
+}
+
+$stmt = $pdo->prepare(
+  "SELECT concat(a.First_Name, ' ', a.Last_Name) AS Author, b.Title AS Book, Authors_Books_ID FROM Authors_Books ab
+  JOIN authors a
+    ON a.Author_ID = ab.Author_FK
+  JOIN books b
+    ON b.Book_ID = ab.Book_FK
+  WHERE Authors_Books_ID = :xyz");
+$stmt->execute(array(":xyz" => $_GET['A_B_ID']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if ( $row === false ) {
+  $_SESSION['error'] = 'Bad value for Authors_Books_ID';
+  header( 'Location: library_management.php' ) ;
+  return;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/libstyle.css">
   <title>TB | Delete User</title>
 </head>
 <body>
@@ -21,38 +55,6 @@ session_start();
       </ul>
     </nav>
 
-  <?php
-    if ( isset($_POST['delete']) && isset($_POST['A_B_ID']) ) {
-      $sql = "DELETE FROM Authors_Books WHERE Authors_Books_ID like :zip";
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute(array(':zip' => $_POST['A_B_ID']));
-      $_SESSION['success'] = 'Record deleted';
-      header( 'Location: library_management.php' ) ;
-      return;
-    }
-
-    // Guardian: Make sure that Account_ID is present
-    if ( ! isset($_GET['A_B_ID']) ) {
-      $_SESSION['error'] = "Missing Authors_Books_ID";
-      header('Location: library_management.php');
-      return;
-    }
-
-    $stmt = $pdo->prepare(
-      "SELECT concat(a.First_Name, ' ', a.Last_Name) AS Author, b.Title AS Book, Authors_Books_ID FROM Authors_Books ab
-      JOIN authors a
-        ON a.Author_ID = ab.Author_FK
-      JOIN books b
-        ON b.Book_ID = ab.Book_FK
-      WHERE Authors_Books_ID = :xyz");
-    $stmt->execute(array(":xyz" => $_GET['A_B_ID']));
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ( $row === false ) {
-      $_SESSION['error'] = 'Bad value for Authors_Books_ID';
-      header( 'Location: library_management.php' ) ;
-      return;
-    }
-  ?>
   <p>Confirm: Removing <?= htmlentities($row['Author']) . " from " . htmlentities($row['Book'])?></p>
 
   <form method="post">
