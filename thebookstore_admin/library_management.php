@@ -102,24 +102,24 @@ unset($_SESSION['error']);
             <li><a href="library_management.php">Library Management</a></li>
             <li><a href="rentals.php">Rentals</a></li>
             <li><a href="index.php">Log Out</a></li>
-            <div class="modnav">
-                <div class="dropdown">    
-                <li><a href="#books" >Books</a></li>
-                    <div class="dropdown-content">
-                    <li><a href="#newbook" >Add Book</a></li>
-                    </div>
+        </ul>
+        <ul class="modnav">
+            <div class="dropdown">    
+            <li><a href="#books" >Books</a></li>
+                <div class="dropdown-content">
+                <li><a href="#newbook" >Add Book</a></li>
                 </div>
-                <div class="dropdown">
-                <li><a href="#authors" class="dropdown">Authors</a></li>
-                    <div class="dropdown-content">
-                    <li><a href="#newauthor" >Add Author</a></li>
-                    </div>
+            </div>
+            <div class="dropdown">
+            <li><a href="#authors" class="dropdown">Authors</a></li>
+                <div class="dropdown-content">
+                <li><a href="#newauthor" >Add Author</a></li>
                 </div>
-                <div class="dropdown">
-                <li><a href="#genres" class="dropdown">Genres</a></li>
-                    <div class="dropdown-content">
-                    <li><a href="#newgenre" >Add Genre</a></li>
-                    </div>
+            </div>
+            <div class="dropdown">
+            <li><a href="#genres" class="dropdown">Genres</a></li>
+                <div class="dropdown-content">
+                <li><a href="#newgenre" >Add Genre</a></li>
                 </div>
             </div>   
         </ul>
@@ -200,14 +200,13 @@ unset($_SESSION['error']);
 <?php
     echo('<h2>Authors</h2>');
         echo('<table border="1">'."\n");
-            echo "<tr><th>";
-            echo('Last Name');
-            echo("</th><th>");
-            echo('First Name');
-            echo("</th><th>");
-            echo('Action');
-            echo("</th></tr>\n");
-        
+                echo("<tr><th>");
+                echo('Last Name');
+                echo("</th><th>");
+                echo('First Name');
+                echo("</th><th>");
+                echo('Action');
+                echo("</th></tr>\n");
             $stmt = $pdo->query(
                 "SELECT Author_ID, First_Name, Last_Name, concat(First_Name, ' ', Last_name) AS Author 
                 FROM Authors
