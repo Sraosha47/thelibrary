@@ -6,7 +6,7 @@ if ( isset($_POST['title'])
 && isset($_POST['isbn']) 
 && isset($_POST['description'])){
 
-// Data validation
+//PDO to add new book
     if ( strlen($_POST['title']) < 1 || strlen($_POST['release']) < 1) {
     $_SESSION['error'] = 'Missing data';
     header("Location: library_management.php");
@@ -27,6 +27,8 @@ if ( isset($_POST['title'])
     header( 'Location: library_management.php' ) ;
     return;
     }
+
+//PDO to add new author
 if ( isset($_POST['first_name'])  
 && isset($_POST['last_name'])){
     if ( strlen($_POST['first_name']) < 1 || strlen($_POST['last_name']) < 1) {
@@ -47,6 +49,24 @@ if ( isset($_POST['first_name'])
         return;
     }    
 
+//pdo to add new genre
+if ( isset($_POST['genre'])){
+    if ( strlen($_POST['genre']) < 1) {
+        $_SESSION['error'] = 'Missing data';
+        header("Location: library_management.php");
+        return;
+        }
+
+        $sql = "INSERT INTO genres(genre)
+            VALUES (:genre)";
+        $add_author = $pdo->prepare($sql);
+        $add_author->execute(array(
+            ':genre' => $_POST['genre']
+        ));
+        $_SESSION['success'] = $_POST['genre'].' added to Genres';
+        header( 'Location: library_management.php' );
+        return;
+    }    
 
 // Flash pattern
 if ( isset($_SESSION['error']) ) {
@@ -98,6 +118,7 @@ unset($_SESSION['error']);
             </div>   
         </ul>
     </nav>
+    
 <section id="books" class="tables">
     <h1>Library Management</h1>
     <?php
@@ -161,14 +182,15 @@ unset($_SESSION['error']);
         <label for="yes">Yes</label>
         <input type="radio" id="no" name="available" value=0>
         <label for="no">No</label></p>
-        <p><input type="submit" value="Add"/>
-        <a href="library_management.php">Cancel</a></p>
+        <p class="buttons">
+            <input type="submit" value="Add"/>
+            <button type="reset">Cancel</button></p>
+        </p>
     </form>
 </section>
 
 
 <section class="tables" id="authors">
-    <div class="tables">
 <?php
     echo('<h2>Authors</h2>');
         echo('<table border="1">'."\n");
@@ -196,27 +218,62 @@ unset($_SESSION['error']);
             }
         echo("</table>");
     ?>
-    </div>
     </section>
 
-    <section class="tables" id="newauthor">
-    <div class="tables">
+<section class="tables" id="newauthor">
     <h2>Add New Author</h2>
     <form method="post">
         <p><label for="first_name">First Name:</label>
         <input type="text" id="first_name" name="first_name"></p>
         <p><label for="last_name">Last Name:</label>
         <input type="text" id="last_name" name="last_name"></p>
-        <p><input type="submit" value="Add"/>
-        <a href="library_management.php">Cancel</a></p>
+        <p class="buttons">
+            <input type="submit" value="Add"/>
+            <button type="reset">Cancel</button></p>
+        </p>
     </form>
-    </div>
+
 </section>
 
 <section class="tables" id="genres">
-<h2>Genres</h2>
+<?php
+    echo('<h2>Genres</h2>');
+        echo('<table border="1">'."\n");
+            echo "<tr><th>";
+            echo('Genre');
+            echo("</th><th>");
+            echo('Action');
+            echo("</th></tr>\n");
+        
+            $stmt = $pdo->query(
+                "SELECT Genre_ID, Genre 
+                FROM Genres
+                ORDER BY Genre");
+
+            while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
+                echo( "<tr><td>");
+                echo(htmlentities($row['Genre']));
+                echo("</td><td>");
+                echo('<a href="delete_genre.php?Genre_ID='.$row['Genre_ID'].'">Delete</a>');
+                echo("</td></tr>\n");
+            }
+        echo("</table>");
+    ?>
+</section>
+
+<section class="tables" id="newgenre">
+    <h2>Add New Genre</h2>
+    <form method="post">
+        <p><label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre"></p>
+        <p class="buttons">
+            <input type="submit" value="Add"/>
+            <button type="reset">Cancel</button></p>
+        </p>
+    </form>
 
 </section>
+
 
 </body>
 </html>
