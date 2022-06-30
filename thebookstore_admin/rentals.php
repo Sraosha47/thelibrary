@@ -2,16 +2,14 @@
 require_once "pdo.php";
 session_start();
 
-// Guardian: Make sure that Account_ID is present
-if ( ! isset($_GET['G_B_ID']) ) {
-    $_SESSION['error'] = "Missing Genres_Books_ID";
-    header('Location: library_management.php');
-    return;
+//checks if user is actually logged in
+if($_SESSION['admin'] === false){
+    $_SESSION['error'] = 'You shall not pass!';
+    header('Location: index.php');
+    exit;
   }
   
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
