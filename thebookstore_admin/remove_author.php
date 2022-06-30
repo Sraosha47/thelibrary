@@ -3,21 +3,20 @@ require_once "pdo.php";
 session_start();
 
 
+$stmt = $pdo->prepare(
+  "SELECT book_fk FROM authors_books
+  WHERE Authors_Books_ID = :ID;");
+$stmt->execute(array(":ID" => $_GET['A_B_ID']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$book = $row['book_fk'];
 
 
 if ( isset($_POST['delete']) && isset($_POST['A_B_ID']) ) {
   $sql = "DELETE FROM Authors_Books WHERE Authors_Books_ID like :zip";
   $stmt = $pdo->prepare($sql);
   $stmt->execute(array(':zip' => $_POST['A_B_ID']));
-/*
-  $stmt = $pdo->prepare(
-    "SELECT book_fk FROM authors_books
-    WHERE Authors_Books_ID = :ID;");
-  $stmt->execute(array(":ID" => $_GET['A_B_ID']));
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  $book = $row['book_fk'];*/
   $_SESSION['success'] = 'Author removed';
-  header( 'Location: book_description.php?Book_ID='.$row['book_fk'] ) ;
+  header( 'Location: book_description.php?Book_ID='.$row['book_fk'].'#auth_gen' ) ;
   return;
 }
 
