@@ -2,6 +2,13 @@
 require_once "pdo.php";
 session_start();
 
+// Guardian: Make sure that Book_ID is present
+if ( ! isset($_GET['Book_ID']) ) {
+    $_SESSION['error'] = "Missing Book_ID";
+    header('Location: library_management.php');
+    exit;
+  }
+
 //Update Book Data
 if ( isset($_POST['title']) && isset($_POST['descr']) && isset($_POST['isbn'])
      && isset($_POST['release']) && isset($_POST['id']) ) {
@@ -33,13 +40,7 @@ if ( isset($_POST['title']) && isset($_POST['descr']) && isset($_POST['isbn'])
     exit;
 } 
 
-// Guardian: Make sure that Book_ID is present
-if ( ! isset($_GET['Book_ID']) ) {
-  $_SESSION['error'] = "Missing Book_ID";
-  header('Location: library_management.php');
-  exit;
-}
-
+//fetching basic info
 $stmt = $pdo->prepare(
     "SELECT * FROM books
     WHERE Book_ID = :ID;");
@@ -78,6 +79,20 @@ $Genres->execute(array(":ID" => $_GET['Book_ID']));
 
 while ($row = $Genres->fetch(PDO::FETCH_ASSOC)){
     array_push($Arr_Genres, $row['Genre']);
+}
+
+//Update Authors
+if ( isset($_POST['authors'])) {
+
+    $sql = "INSERT INTO authors_books(Author_FK, Book_FK) VALUES (:author, :book); ";
+    $upd_authors = $pdo->prepare($sql);
+    $upd_authors->execute(array(
+        ':author' => $_POST['authors'],
+        ':book' => $book
+        ));
+    $_SESSION['success'] = 'Authors updated';
+    header( 'Location: book_description.php?Book_ID='.$book.'#auth_gen' );
+    exit;
 }
 
 //array containing all Authors associated with the book
@@ -180,9 +195,9 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <select name="authors">
                 <?php 
                 //turns all the genres in the table Genres to options in the select field
-                $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author FROM authors");
+                $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author, Author_ID FROM authors");
                 while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                    echo "<option value=''>" . htmlentities($row['Author']) . "</option>";
+                    echo "<option value=".htmlentities($row['Author_ID']).">" . htmlentities($row['Author']) . "</option>";
                 } 
                 ?>
             </select>
@@ -193,6 +208,8 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         </p>
     </form>
     </section>
+    
+    
     <section class="sections">                
     <?php
         //Genre Table
