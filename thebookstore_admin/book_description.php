@@ -122,30 +122,31 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     </nav>
     <section class="tables" id="basic">
     <h1>Book Description</h1>
-
+    <!-- Basic info from the books table -->
     <h2>Basic Info</h2>
     <form method="post">
         <input type="hidden" name="id" value="<?= $book ?>">
-        <p>Title:
+        <p><label for="title">Title:</label>
         <input type="text" name="title" value="<?= $title ?>"></p>
-        <p>Description:
+        <p><label for="descr">Description:</label>
         <textarea name="descr" value="<?= $description ?>"><?= $description ?></textarea></p>
-        <p>ISBN:
+        <p><label for="isbn">ISBN:</label>
         <input type="text" name="isbn" value="<?= $isbn ?>"></p>
-        <p>Release:
+        <p><label for="release">Release:</label>
         <input type="date" name="release" value="<?= $release ?>"></p>
         <p><label for="available">Available:</label>
         <input type="radio" id="yes" name="available" <?php if($available) {echo("checked");} ?> value=1>
         <label for="yes">Yes</label>
         <input type="radio" id="no" name="available" <?php if(!$available) {echo("checked");} ?> value=0>
         <label for="no">No</label></p>
-        <p><input type="submit" value="Update"/>
-        <a href="library_management.php">Cancel</a></p>
+        <p class="buttons"><input type="submit" value="Update"/>
+        <button type="reset">Cancel</button></p></p>
     </form>
     </section>
 
     <section class="tables" id="auth_gen">
     <h2>Authors & Genres</h2>
+    <section class="sections">
     <?php 
     //Authors Table
         echo('<table border="1">'."\n");
@@ -170,7 +171,30 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             echo("</td></tr>");
         }
         echo("</table>");
-
+        ?>
+    </section>
+    <section class="sections">
+    <!-- Author Form -->
+    <form method="post">
+        <p><label for="authors">Authors:</label>
+            <select name="authors">
+                <?php 
+                //turns all the genres in the table Genres to options in the select field
+                $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author FROM authors");
+                while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    echo "<option value=''>" . htmlentities($row['Author']) . "</option>";
+                } 
+                ?>
+            </select>
+        </p>
+        <p class="buttons">
+            <button type="reset">Cancel</button></p>
+            <input type="submit" value="Add Author"/>
+        </p>
+    </form>
+    </section>
+    <section class="sections">                
+    <?php
         //Genre Table
         echo('<table border="1">'."\n");
         echo("<tr><th>");
@@ -197,24 +221,13 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
         }
         echo("</table>");
     ?>
-    <!-- Author and Genre Forms -->
-    <form method="post">
-        <p>Author:
-            <select name="author">
-                <?php 
-                //turns all the genres in the table Genres to options in the select field
-                $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author FROM authors");
-                while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                    echo "<option value=''>" . htmlentities($row['Author']) . "</option>";
-                } 
-                ?>
-            </select>
-        </p>
-        <p><input type="submit" value="Add Author"/></p>
-    </form>
+    </section>
+
+    <section class="sections">
+    <!-- genre form -->
     <form method="POST">
-        <p>Genre:
-            <select name="genre">
+        <p><label for="genres">Genres:</label>
+            <select name="genres">
                 <?php 
                 //turns all the genres in the table Genres to options in the select field
                 $stmt = $pdo->query("SELECT Genre FROM genres");
@@ -224,8 +237,12 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
                 ?>
             </select>
         </p>
-        <p><input type="submit" value="Add Genre"/></p>
+        <p class="buttons">
+            <button type="reset">Cancel</button></p>
+            <input type="submit" value="Add Genre"/>
+        </p>
     </form>
+    </section>
     </section>
 </body>
 </html>
