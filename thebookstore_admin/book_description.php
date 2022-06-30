@@ -59,12 +59,6 @@ if ( $row === false ) {
     exit;
 }
 
-// Flash pattern
-if ( isset($_SESSION['error']) ) {
-    echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
-    unset($_SESSION['error']);
-}
-
 $title = htmlentities($row['Title']);
 $description = htmlentities($row['Description']);
 $isbn = htmlentities($row['ISBN']);
@@ -166,6 +160,13 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
             unset($_SESSION['success']);
         } 
+
+    // Flash pattern
+    if ( isset($_SESSION['error']) ) {
+        echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+        unset($_SESSION['error']);
+    }
+
     ?>
     <form method="post">
         <input type="hidden" name="id" value="<?= $book ?>">
