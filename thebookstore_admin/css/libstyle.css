@@ -151,6 +151,8 @@
     width: 100%;
   }
 
+
+
   .tables{
     display: flex;
     flex-direction: column;
@@ -166,13 +168,19 @@
     height: auto;
   }
 
+  table { 
+    display: flex;
+    flex-direction: column;
+    height:auto;
+    overflow: auto;
+  }
 
   /* nav */
   
   .nav {
     display: flex;
-    justify-content:center;
     position: fixed;
+    justify-content: space-between;
     top: 0;
     left: 0;
     width: 100%;
@@ -183,13 +191,12 @@
 
   .modnav{
     display: flex;
-    flex-direction: row;
     background-color: var(--main-white);
-    justify-self: end;
   }
 
   .nav-list {
     display: flex;
+    justify-self: start;
     margin-right: 2rem;
   }
   
@@ -213,7 +220,11 @@
 
   .modnav a{
     display: block;
+    text-decoration: none;
+    display: block;
     color: var(--main-black);
+    font-size: 2.2rem;
+    padding: 2rem;
   }
   
   .nav-list a:hover {
