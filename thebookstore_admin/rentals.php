@@ -1,7 +1,17 @@
 <?php
 require_once "pdo.php";
 session_start();
+
+// Guardian: Make sure that Account_ID is present
+if ( ! isset($_GET['G_B_ID']) ) {
+    $_SESSION['error'] = "Missing Genres_Books_ID";
+    header('Location: library_management.php');
+    return;
+  }
+  
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

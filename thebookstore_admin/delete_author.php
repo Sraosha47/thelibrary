@@ -2,6 +2,13 @@
 require_once "pdo.php";
 session_start();
 
+//checks if user is actually logged in
+if($_SESSION['admin'] === false){
+  $_SESSION['error'] = 'You shall not pass!';
+  header('Location: index.php');
+  exit;
+}
+
 if ( isset($_POST['delete']) && isset($_POST['Author_ID']) ) {
   $sql = 
   "DELETE FROM authors_books WHERE Author_FK = :zip;

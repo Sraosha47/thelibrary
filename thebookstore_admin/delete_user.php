@@ -2,6 +2,13 @@
 require_once "pdo.php";
 session_start();
 
+//checks if user is actually logged in
+if($_SESSION['admin'] === false){
+  $_SESSION['error'] = 'You shall not pass!';
+  header('Location: index.php');
+  exit;
+}
+
 //statement deleting the user
 if ( isset($_POST['delete']) && isset($_POST['Account_ID']) ) {
   $sql = "DELETE FROM Accounts WHERE Account_ID like :zip";

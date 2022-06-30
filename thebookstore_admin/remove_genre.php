@@ -2,6 +2,20 @@
 require_once "pdo.php";
 session_start();
 
+//checks if user is actually logged in
+if($_SESSION['admin'] === false){
+  $_SESSION['error'] = 'You shall not pass!';
+  header('Location: index.php');
+  exit;
+}
+
+// Guardian: Make sure that Account_ID is present
+if ( ! isset($_GET['G_B_ID']) ) {
+  $_SESSION['error'] = "Missing Genres_Books_ID";
+  header('Location: library_management.php');
+  return;
+}
+
 if ( isset($_POST['delete']) && isset($_POST['G_B_ID']) ) {
   $sql = "DELETE FROM Genres_Books WHERE Genres_Books_ID like :zip";
   $stmt = $pdo->prepare($sql);
@@ -11,12 +25,6 @@ if ( isset($_POST['delete']) && isset($_POST['G_B_ID']) ) {
   return;
 }
 
-// Guardian: Make sure that Account_ID is present
-if ( ! isset($_GET['G_B_ID']) ) {
-  $_SESSION['error'] = "Missing Genres_Books_ID";
-  header('Location: library_management.php');
-  return;
-}
 
 $stmt = $pdo->prepare(
   "SELECT g.genre AS Genre, b.Title AS Book, Genres_Books_ID FROM Genres_Books gb

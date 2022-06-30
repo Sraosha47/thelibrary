@@ -2,6 +2,13 @@
 require_once "pdo.php";
 session_start();
 
+//checks if user is actually logged in
+if($_SESSION['admin'] === false){
+    $_SESSION['error'] = 'You shall not pass!';
+    header('Location: index.php');
+    exit;
+}
+
 // Guardian: Make sure that Book_ID is present
 if ( ! isset($_GET['Book_ID']) ) {
     $_SESSION['error'] = "Missing Book_ID";
