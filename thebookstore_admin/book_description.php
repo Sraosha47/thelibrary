@@ -154,6 +154,12 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     <h1>Book Description</h1>
     <!-- Basic info from the books table -->
     <h2>Basic Info</h2>
+    <?php
+    if ( isset($_SESSION['success']) ) {
+            echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
+            unset($_SESSION['success']);
+        } 
+    ?>
     <form method="post">
         <input type="hidden" name="id" value="<?= $book ?>">
         <p><label for="title">Title:</label>
@@ -178,6 +184,12 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     <h2>Authors & Genres</h2>
     <section class="sections">
     <?php 
+
+    if ( isset($_SESSION['success']) ) {
+        echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
+        unset($_SESSION['success']);
+        }
+
     //Authors Table
         echo('<table border="1">'."\n");
         echo("<tr><th>");
