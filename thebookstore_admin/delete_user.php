@@ -11,9 +11,17 @@ if($_SESSION['admin'] === false){
 
 //statement deleting the user
 if ( isset($_POST['delete']) && isset($_POST['Account_ID']) ) {
-  $sql = "DELETE FROM Accounts WHERE Account_ID like :zip";
+  $sql = "UPDATE books b 
+          JOIN rentals r
+            ON r.Book_FK = b.Book_ID
+          JOIN accounts a
+            ON r.Account_FK = a.Account_ID
+          SET Available = 1
+          WHERE r.Account_FK = :account; 
+          DELETE FROM rentals WHERE Account_FK = :account;
+          DELETE FROM Accounts WHERE Account_ID = :account;";
   $stmt = $pdo->prepare($sql);
-  $stmt->execute(array(':zip' => $_POST['Account_ID']));
+  $stmt->execute(array(':account' => $_POST['Account_ID']));
   $_SESSION['success'] = 'Record deleted';
   header( 'Location: account_management.php' ) ;
   exit;
