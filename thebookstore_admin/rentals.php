@@ -47,14 +47,14 @@ if($_SESSION['admin'] === false){
             echo("<tr><th>");
             echo('Due Date');
             echo("</th><th>");
-            echo('Name');
+            echo('Client');
             echo("</th><th>");
             echo('Book');
             echo("</th><th>");
             echo('Action');
             echo("</th></tr>\n");
             $stmt = $pdo->query(
-                "SELECT r.Due_Date AS Date, a.Account_ID AS ID, concat(a.First_Name, ' ', a.Last_Name) AS Name, b.Title AS Book 
+                "SELECT r.Due_Date AS Date, a.Account_ID AS ID, concat(a.Last_Name, ', ', a.First_Name) AS Name, b.Title AS Book 
                 FROM rentals r
                 JOIN accounts a
                     ON r.Account_FK = a.Account_ID
