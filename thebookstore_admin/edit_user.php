@@ -16,8 +16,8 @@ if ( ! isset($_GET['Account_ID']) ) {
     exit;
 }
 
-if ( isset($_POST['return']) && $_POST['rDate'] !== 0){
-    $_SESSION['error'] = ' Book already returned';
+if ( isset($_POST['return']) && htmlentities($_POST['rDate']) !== '0000-00-00'){
+    $_SESSION['error'] = 'Book already returned';
     header( 'Location: edit_user.php?Account_ID='.$_POST['Account'].'#rentals' ) ;
     exit;   
 }
@@ -28,18 +28,16 @@ elseif ( isset($_POST['return']) && isset($_POST['Account'])) {
     $sql = 
     "UPDATE books
     SET available = 1
-    WHERE title = :title;
-    
+    WHERE Book_ID = :book;
     UPDATE rentals
     SET Return_Date = CURRENT_TIMESTAMP
-    WHERE Account_FK = :account AND Book_FK = :book;";
+    WHERE Rental_ID = :rental;";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array(
-        ':title' => $_POST['Title'],
-        ':account' => $_POST['Account'],
+        ':rental' => $_POST['Rental'],
         ':book' => $_POST['Book']
     ));
-    $_SESSION['success'] = ' Book Returned';
+    $_SESSION['success'] = 'Book Returned';
     header( 'Location: edit_user.php?Account_ID='.$_POST['Account'].'#rentals' ) ;
     exit;
   }
@@ -137,11 +135,8 @@ $account = $row['Account_ID'];
         </ul>
     </nav>
     <section class="tables" id="info">
-    <h1>Edit Account</h1>
+    <h1>Account Information</h1>
 
-    <h2>Account Information</h2>
-<?php
-?>
     <form method="post">
         <input type="hidden" name="id" value="<?= $account ?>">
         <p>First Name:
@@ -189,7 +184,8 @@ $account = $row['Account_ID'];
             echo("</th></tr>\n");
             $stmt = $pdo->query(
                 "SELECT r.Due_Date AS Date, 
-                r.Return_Date AS rDate, 
+                r.Return_Date AS rDate,
+                r.Rental_ID AS Rental,
                 concat(a.First_Name, ' ', a.Last_Name) AS Name,
                 a.Account_ID as Account,
                 b.Title AS Title, 
@@ -214,7 +210,7 @@ $account = $row['Account_ID'];
                 echo('<form method="post">
                 <input type="hidden" name="Account" value='.$row['Account'].'>
                 <input type="hidden" name="Book" value='.$row['Book'].'>
-                <input type="hidden" name="Title value='.$row['Title'].'>
+                <input type="hidden" name="Rental" value='.$row['Rental'].'>
                 <input type="hidden" name="rDate" value='.$row['rDate'].'>
                 <p class="buttons">
                   <input type="submit" value="Return" name="return">
