@@ -114,7 +114,7 @@ if ( isset($_POST['authors'])) {
 //array containing all Authors associated with the book
 $Arr_Authors = array();
 $Authors = $pdo->prepare(
-    "SELECT ab.authors_books_ID, concat(a.First_Name, ' ', a.Last_Name) as Author from books b
+    "SELECT ab.authors_books_ID, concat(a.Last_Name, ', ', a.First_Name) as Author from books b
     JOIN authors_books ab
         on ab.Book_FK = b.Book_ID
     Join authors a
@@ -147,14 +147,14 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <li><a href="index.php">Log Out</a></li>
         </ul>    
         <ul class="modnav">
-            <li><a href="#basic">Basic Info</a></li>
+            <li><a href="#description">Book Description</a></li>
             <li><a href="#auth_gen">Authors & Genres</a></li>  
         </ul>
     </nav>
-    <section class="tables" id="basic">
+
+    <section class="tables" id="description">
     <h1>Book Description</h1>
     <!-- Basic info from the books table -->
-    <h2>Basic Info</h2>
     <?php
     if ( isset($_SESSION['success']) ) {
             echo '<p style="color:green">'.$_SESSION['success']."</p>\n";
@@ -211,7 +211,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
                 on a.Author_ID = ab.Author_FK 
             join books b 
                 on b.Book_ID = ab.Book_FK 
-            where concat(a.First_Name, ' ', a.Last_Name) = '$author' AND b.ISBN = '$isbn' ");
+            where concat(a.Last_Name, ', ', a.First_Name) = '$author' AND b.ISBN = '$isbn' ");
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             echo("<tr><td>\n");
@@ -230,7 +230,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <select name="authors">
                 <?php 
                 //turns all the genres in the table Genres to options in the select field
-                $stmt = $pdo->query("SELECT concat(First_Name, ' ', Last_Name) as Author, Author_ID FROM authors");
+                $stmt = $pdo->query("SELECT concat(Last_Name, ', ', First_Name) as Author, Author_ID FROM authors ORDER BY Last_Name");
                 while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
                     echo "<option value=".htmlentities($row['Author_ID']).">" . htmlentities($row['Author']) . "</option>";
                 } 
@@ -283,7 +283,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             <select name="genres">
                 <?php 
                 //turns all the genres in the table Genres to options in the select field
-                $stmt = $pdo->query("SELECT Genre, Genre_ID FROM genres");
+                $stmt = $pdo->query("SELECT Genre, Genre_ID FROM genres ORDER BY Genre");
                 while ( $row = $stmt->fetch(PDO::FETCH_ASSOC)){
                     echo "<option value=".htmlentities($row['Genre_ID']).">" . htmlentities($row['Genre']) . "</option>";
                 } 
