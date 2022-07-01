@@ -23,7 +23,7 @@ if(isset($_POST['email'])
         exit;
     }
     else{
-        $_SESSION['success'] = 'Login successful. Welcome.' . $row['First_Name'];
+        $_SESSION['success'] = 'Login successful. Welcome ' . $row['First_Name'].'!';
         $_SESSION['admin'] = true;
         header('Location: library_management.php');
         exit;
