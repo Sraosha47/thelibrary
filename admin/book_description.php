@@ -136,7 +136,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/libstyle.css">
-    <title>TB | Book Description</title>
+    <title>TL | Book Description</title>
 </head>
 <body>
     <nav id="navbar" class="nav">
@@ -200,11 +200,11 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
 
     //Authors Table
         echo('<table border="1">'."\n");
-        echo("<tr><th>");
-        echo('Authors');
-        echo("</th><th>");
-        echo("Action");
-        echo("</th></tr>");
+            echo("<tr><th>");
+            echo('Authors');
+            echo("</th><th>");
+            echo("Action");
+            echo("</th></tr>");
         foreach($Arr_Authors as $author){
             $stmt = $pdo->query("SELECT ab.Authors_Books_ID as Entry FROM authors_books ab 
             join authors a 
@@ -219,7 +219,7 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             echo("</td><td>");
             echo('<a href="remove_author.php?A_B_ID='.$result['Entry'].'">Remove</a>');
             echo("</td></tr>");
-        }
+            }
         echo("</table>");
         ?>
     </section>
@@ -249,11 +249,11 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
     <?php
         //Genre Table
         echo('<table border="1">'."\n");
-        echo("<tr><th>");
-        echo('Genres');
-        echo("</th><th>");
-        echo("Action");
-        echo("</th></tr>");
+            echo("<tr><th>");
+            echo('Genres');
+            echo("</th><th>");
+            echo("Action");
+            echo("</th></tr>");
         foreach($Arr_Genres as $genre){
             $stmt = $pdo->query("SELECT gb.Genres_Books_ID as Entry FROM genres_books gb 
             join genres g 
@@ -266,11 +266,9 @@ while ($row = $Authors->fetch(PDO::FETCH_ASSOC)){
             echo("<tr><td>\n");
             echo($genre);
             echo("</td><td>");
-
-            
             echo('<a href="remove_genre.php?G_B_ID='.$result['Entry'].'">Remove</a>');
             echo("</td></tr>");
-        }
+            }
         echo("</table>");
     ?>
     </section>

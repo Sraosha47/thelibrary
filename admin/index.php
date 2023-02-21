@@ -10,7 +10,7 @@ if(isset($_POST['email'])
         WHERE Email = :email AND Password = :password;");
     $stmt->execute(array(
         ":email" => $_POST['email'],
-        ":password" => $_POST['password']));
+        ":password" => hash('sha256',$_POST['password'])));
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ( $row === false ) {
         $_SESSION['error'] = 'Password or Email incorrect';
@@ -39,12 +39,12 @@ if(isset($_POST['email'])
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/libstyle.css">
-    <title>TB | Login</title>
+    <title>TL | Login</title>
 </head>
 <body>
 
     <section class="tables">
-        <h1>The Bookstore | Admin Portal</h1>
+        <h1>The Library | Admin Portal</h1>
     <?php
         if ( isset($_SESSION['error']) ) {
             echo '<p style="color:red">'.$_SESSION['error']."</p>\n";

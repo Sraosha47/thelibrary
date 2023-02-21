@@ -49,14 +49,20 @@ elseif ( isset($_POST['fname']) && isset($_POST['lname']) && isset($_POST['email
  // Data validation
  if ( strlen($_POST['fname']) < 1 || strlen($_POST['password']) < 1) {
      $_SESSION['error'] = 'Missing data';
-     header("Location: edit.php?Account_ID=".$_POST['Account_ID']);
+     header("Location: edit_user.php?Account_ID=".$_POST['id']);
      exit;
  }
 
  if ( strpos($_POST['email'],'@') === false ) {
      $_SESSION['error'] = 'Bad data';
-     header("Location: edit.php?Account_ID=".$_POST['Account_ID']);
+     header("Location: edit_user.php?Account_ID=".$_POST['id']);
      exit;
+ }
+
+ if ( $_POST['password'] !== $_POST['check']){
+    $_SESSION['error'] = 'Passwords do not match';
+    header("Location: edit_user.php?Account_ID=".$_POST['id']);
+    exit;
  }
 
  $sql = "UPDATE accounts SET 
@@ -73,14 +79,14 @@ elseif ( isset($_POST['fname']) && isset($_POST['lname']) && isset($_POST['email
      ':fname' => $_POST['fname'],
      ':lname' => $_POST['lname'],
      ':email' => $_POST['email'],
-     ':password' => $_POST['password'],
+     ':password' => hash('sha256',$_POST['password']),
      ':phone' => $_POST['phone'],
      ':address' => $_POST['address'],
      ':town' => $_POST['town'],
      ':code' => $_POST['code'],
      ':Account_ID' => $_POST['id']));
  $_SESSION['success'] = 'Record updated';
- header("Location: edit.php?Account_ID=".$_POST['Account_ID']);
+ header("Location: edit.php?Account_ID=".$_POST['id']);
  exit;
 }
 
@@ -118,7 +124,7 @@ $account = $row['Account_ID'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/libstyle.css">
-    <title>TB | Edit Account</title>
+    <title>TL | Edit Account</title>
 </head>
 <body>
 
@@ -136,7 +142,12 @@ $account = $row['Account_ID'];
     </nav>
     <section class="tables" id="info">
     <h1>Account Information</h1>
-
+<?php  
+    if ( isset($_SESSION['error']) ) {
+            echo '<p style="color:red">'.$_SESSION['error']."</p>\n";
+            unset($_SESSION['error']);
+        }
+?>
     <form method="post">
         <input type="hidden" name="id" value="<?= $account ?>">
         <p>First Name:
@@ -145,8 +156,11 @@ $account = $row['Account_ID'];
         <input type="text" name="lname" value="<?= $lastname ?>"></p>
         <p>Email:
         <input type="email" name="email" value="<?= $email ?>"></p>
-        <p>Password:
-        <input type="text" name="password" value="<?= $password ?>"></p>
+        <p>Passwort: Enter again:</p>
+        <p>
+        <input class="password" type="password" name="password" value="">
+        <input class="password" type="password" name="check" value="">
+        </p>
         <p>Phone:
         <input type="text" name="phone" value="<?= $phone ?>"></p>
         <p>Address:

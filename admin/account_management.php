@@ -38,7 +38,7 @@ if ( isset($_POST['fname'])
     ':password' => $_POST['password'],
     ':phone' => $_POST['phone'],
     ':address' => $_POST['address'],
-    ':pcode' => $_POST['pcode'],
+    ':pcode' => hash("sha256", $_POST['pcode']),
     ':town' => $_POST['town'],
     ':admin' => $_POST['admin']
     ));
@@ -63,7 +63,7 @@ if ( isset($_SESSION['error']) ) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/libstyle.css">
-    <title>TB | Account Management</title>
+    <title>TL | Account Management</title>
 </head>
 <body>
     <nav id="navbar" class="nav">
